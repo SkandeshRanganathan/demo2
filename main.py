@@ -6,12 +6,12 @@ from pydantic import BaseModel
 
 app = FastAPI()
 
-# Include routers
+
 app.include_router(posts.router)
 app.include_router(users.router)
 app.include_router(auth.router)
 
-# Tortoise ORM DB setup
+
 register_tortoise(
     app,
     db_url="postgresql://postgres:Skandesh2005*@localhost/fastapi",
@@ -20,7 +20,7 @@ register_tortoise(
     add_exception_handlers=True,
 )
 
-# Pydantic schemas
+
 class PostSchema(BaseModel):
     title: str
     content: str
@@ -32,7 +32,6 @@ class PostResponse(PostSchema):
     class Config:
         orm_mode = True
 
-# CRUD operations using Tortoise ORM
 @app.post("/posts", response_model=PostResponse)
 async def create_post(post: PostSchema):
     new_post = await models.Post.create(**post.model_dump())
